@@ -1,0 +1,104 @@
+---
+title: "ANOVA Tutorial"
+author: "FMU Biology Department"
+date: "January 3, 2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## ANOVA in R
+This documents includes code for creating a data object in R, displaying summary statistics, creating an informative plot, and running an Analysis of Variance (ANOVA).
+
+### Background
+Nicolas Cage is considered the greatest actor of all time by many people in the United States. However, Hollywood scientists think opinions of this amazing actor are related to the culture of individual cities. Thus, to better understand how successful a new movie with Nicolas Cage will be, scientists must understand these spatial patterns. The data below represent a random selection of preference scores by people in three different South Carolina Cities. Preference scores are expressed as a percentage and range from 0 to 100 with 0 indicating low preference (i.e., does not like Nicolas Cage) and 100 indicates high preference (i.e., loves Nicolas Cage).
+
+Hypothesis: If culture influences the opinion of Nicolas Cage, then opinion ratings will be different across cities.
+
+Null Hypothesis: The opinion rating of Nicolas Cage is not different among cities.
+
+### Data
+The data frame created below contain 15 observations (rows) and 2 variables (columns). Each row represents one individual observation. The first column is opinion rating reported by the individual and the second column is the city the individual is from. 
+
+Important points to note. The function used here is "data.frame" which creates a data frame object that is being assigned the name "dat1". Everything after "data.frame" are the arguments being passed to the function. The arguments include the column names (rating and city) and the data in each column. Quotes ("") are used to encapsulate text. This is important so R knows that this column is a categorical variable. The categorical variable will be used as the predictor of rating.
+
+Enter the following code in R:
+```{r createdat}
+dat1 = data.frame(rating = c(13,16,8,15,9,
+                             29,35,24,27,32,
+                             57,59,52,55,60),
+                  city = c("Charleston","Charleston","Charleston","Charleston","Charleston",
+                           "Columbia","Columbia","Columbia","Columbia","Columbia",
+                            "Florence","Florence","Florence","Florence","Florence"))
+```
+The next line of code prints the data contained in the dat1 object
+```{r dat1}
+dat1
+```
+### Display summary data
+Important things to note: "dat1`$`rating" and "dat1`$`city" references your data frame name (dat1) and the column name (e.g., city)
+```{r summarize}
+#Average rating for each city
+tapply(X = dat1$rating, INDEX = dat1$city, FUN = mean)
+
+#Standard deviation of rating for each city
+tapply(X = dat1$rating, INDEX = dat1$city, FUN = sd)
+
+```
+### Plot data
+The next code chunk will display your data in a box plot with custom x- and y-axis labels.
+```{r boxplot, fig.height=4, fig.width=5}
+boxplot(dat1$rating~dat1$city,
+        ylab = "Rating (%)", xlab = "City")
+```
+
+### Run ANOVA
+This code chuck performs an ANOVA, displays summary data, then performs a Tukey post-hoc pairwise comparisons test.
+
+```{r ANOVA, eval=FALSE}
+res = aov(dat1$rating~dat1$city)
+summary(res)
+TukeyHSD(res)
+```
+
+```{r ANOVAres, echo=FALSE}
+res = aov(dat1$rating~dat1$city)
+summary(res)
+TukeyHSD(res)
+```
+\pagebreak
+### Full code block
+```{r fullcode, eval=FALSE}
+#Create data frame
+dat1 = data.frame(rating = c(13,16,8,15,9,
+                             29,35,24,27,32,
+                             57,59,52,55,60),
+                  city = c("Charleston","Charleston","Charleston","Charleston","Charleston",
+                           "Columbia","Columbia","Columbia","Columbia","Columbia",
+                            "Florence","Florence","Florence","Florence","Florence"))
+
+#Print data frame
+dat1
+
+#Summary statistics
+#Average rating for each city
+tapply(X = dat1$rating, INDEX = dat1$city, FUN = mean)
+
+#Standard deviation of rating for each city
+tapply(X = dat1$rating, INDEX = dat1$city, FUN = sd)
+
+#Create Boxplot
+boxplot(dat1$rating~dat1$city,
+        ylab = "Rating (%)", xlab = "City")
+
+#ANOVA
+res = aov(dat1$rating~dat1$city)
+#Display ANOVA results
+summary(res)
+#Tukey post-hoc comparisons
+TukeyHSD(res)
+
+
+```

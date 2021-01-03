@@ -1,0 +1,48 @@
+---
+title: "2-way ANOVA"
+author: "FMU Biology Department"
+date: "January 3, 2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Analysis
+
+This documents includes code for creating a data object in R, creating an informative plot, and running an 2-way Analysis of Variance (ANOVA).
+
+```{r fullcode, eval=TRUE}
+#Create data frame
+dat1 = data.frame(rating = c(13,16,8,15,9,
+                             29,35,24,27,32,
+                             57,59,52,55,60),
+                  city = c("Charleston","Charleston","Charleston","Charleston","Charleston",
+                           "Columbia","Columbia","Columbia","Columbia","Columbia",
+                            "Florence","Florence","Florence","Florence","Florence"),
+                  politics = c("R","R","D","D","I",
+                           "R","R","D","D","I",
+                            "R","R","D","D","I"))
+
+#Print data frame
+dat1
+
+#Create Boxplot
+boxplot(dat1$rating~dat1$city,
+        ylab = "Rating (%)", xlab = "City")
+
+#Create Boxplot
+boxplot(dat1$rating~dat1$politics,
+        ylab = "Rating (%)", xlab = "Policital affiliation")
+
+
+#ANOVA
+res = aov(dat1$rating~dat1$city * dat1$politics)
+#Display ANOVA results
+summary(res)
+#Tukey post-hoc comparisons
+TukeyHSD(res)
+
+
+```
