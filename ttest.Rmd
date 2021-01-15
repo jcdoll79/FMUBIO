@@ -11,7 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ## *t*-test in R
 This documents includes code for creating a data object in R, displaying summary statistics, creating an informative plot, and running a *t*-test.
 
-
 ### Background
 You have completed a habitat restoration project in a western South Carolina forest to expand the population of the federally threatened Bigfoot *Gigantopithecus humongous*. To determine the success of your habitat restoration project you surveyed Bigfoot populations before the restoration project and 20 years after the restoration project. The 20 year time-lag was needed to allow natural reproduction to respond to the habitat restoration. Your survey methods consist of camera traps deployed at 10 sites and cameras recorded sightings for thirty days. Catch per unit effort (CPUE) is calculated as number of Bigfoot observed per camera day at each site.
 
