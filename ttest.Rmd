@@ -1,8 +1,7 @@
 ---
 title: "*t*-test Tutorial"
 author: "FMU Biology Department"
-date: "January 3, 2021"
-output: pdf_document
+output: word_document
 ---
 
 ```{r setup, include=FALSE}

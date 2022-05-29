@@ -1,7 +1,5 @@
 ---
 title: "ANOVA Tutorial"
-author: "FMU Biology Department"
-date: "January 3, 2021"
 output: pdf_document
 ---
 
@@ -10,7 +8,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## ANOVA in R
-This documents includes code for creating a data object in R, displaying summary statistics, creating an informative plot, and running an Analysis of Variance (ANOVA).
+This documents includes code for creating a data object in R, displaying summary statistics, creating an informative plot, checking assumptions for ANOVA, and running an Analysis of Variance (ANOVA).
 
 ### Background
 Nicolas Cage is considered the greatest actor of all time by many people in the United States. However, Hollywood scientists think opinions of this amazing actor are related to the culture of individual cities. Thus, to better understand how successful a new movie with Nicolas Cage will be, scientists must understand these spatial patterns. The data below represent a random selection of preference scores by people in three different South Carolina Cities. Preference scores are expressed as a percentage and range from 0 to 100 with 0 indicating low preference (i.e., does not like Nicolas Cage) and 100 indicates high preference (i.e., loves Nicolas Cage).
@@ -22,83 +20,112 @@ Null Hypothesis: The opinion rating of Nicolas Cage is not different among citie
 ### Data
 The data frame created below contain 15 observations (rows) and 2 variables (columns). Each row represents one individual observation. The first column is opinion rating reported by the individual and the second column is the city the individual is from. 
 
-Important points to note. The function used here is "data.frame" which creates a data frame object that is being assigned the name "dat1". Everything after "data.frame" are the arguments being passed to the function. The arguments include the column names (rating and city) and the data in each column. Quotes ("") are used to encapsulate text. This is important so R knows that this column is a categorical variable. The categorical variable will be used as the predictor of rating.
+Important points to note. The function used here is "data.frame" which creates a data frame object that is being assigned the name "dat". Everything after "data.frame" are the arguments being passed to the function. The arguments include the column names (rating and city) and the data in each column. Quotes ("") are used to encapsulate text. This is important so R knows that this column is a categorical variable. The categorical variable will be used as the predictor of rating.
 
 Enter the following code in R:
 ```{r createdat}
-dat1 = data.frame(rating = c(13,16,8,15,9,
-                             29,35,24,27,32,
-                             57,59,52,55,60),
-                  city = c("Charleston","Charleston","Charleston","Charleston","Charleston",
-                           "Columbia","Columbia","Columbia","Columbia","Columbia",
-                            "Florence","Florence","Florence","Florence","Florence"))
+dat = data.frame(row=c(1,2,3,4,5,1,2,3,4,5,1,2,3,4,5),
+        rating = c(13,16,8,15,9,
+                   29,35,24,27,32,
+                   57,59,52,55,60),
+        city = as.factor( c("Charleston","Charleston","Charleston","Charleston","Charleston",
+                            "Columbia","Columbia","Columbia","Columbia","Columbia",
+                            "Florence","Florence","Florence","Florence","Florence")))
 ```
-The next line of code prints the data contained in the dat1 object
-```{r dat1}
-dat1
-```
-### Display summary data
-Important things to note: "dat1`$`rating" and "dat1`$`city" references your data frame name (dat1) and the column name (e.g., city)
-```{r summarize}
-#Average rating for each city
-tapply(X = dat1$rating, INDEX = dat1$city, FUN = mean)
-
-#Standard deviation of rating for each city
-tapply(X = dat1$rating, INDEX = dat1$city, FUN = sd)
-
-```
-### Plot data
-The next code chunk will display your data in a box plot with custom x- and y-axis labels.
-```{r boxplot, fig.height=4, fig.width=5}
-boxplot(dat1$rating~dat1$city,
-        ylab = "Rating (%)", xlab = "City")
+The next line of code prints the data contained in the dat object
+```{r dat}
+dat
 ```
 
-### Run ANOVA
+### Check Normality Assumption
+
+```{r Norm_Assumptions, fig.height=4, fig.width=5}
+#Load required packages. These might need to be installed
+library(reshape2)
+#Convert from long to wide format
+wide_dat = dcast(dat, row~city,value.var="rating")
+#Check normality
+qqnorm(wide_dat$Charleston)
+qqline(wide_dat$Charleston)
+
+qqnorm(wide_dat$Columbia)
+qqline(wide_dat$Columbia)
+
+qqnorm(wide_dat$Florence)
+qqline(wide_dat$Florence)
+
+#Histogram
+hist(wide_dat$Charleston)
+hist(wide_dat$Columbia)
+hist(wide_dat$Florence)
+
+#Shapiro test
+shapiro.test(wide_dat$Charleston)
+shapiro.test(wide_dat$Columbia)
+shapiro.test(wide_dat$Florence)
+
+```
+
+### Check Homogeneity of Variance Assumption
+
+```{r Var_Assumptions, fig.height=4, fig.width=5}
+#Load required packages. These might need to be installed
+library(car)
+
+#Bartlett's Test
+bartlett.test(dat$rating~dat$city)
+
+#If data were not normal then use Lavene's Test from the car package
+#Bartlett's test
+leveneTest(dat$rating~dat$city)
+
+```
+### Run Equal Variance ANOVA
 This code chuck performs an ANOVA, displays summary data, then performs a Tukey post-hoc pairwise comparisons test.
 
 ```{r ANOVA, eval=FALSE}
-res = aov(dat1$rating~dat1$city)
+res = aov(dat$rating~dat$city)
 summary(res)
 TukeyHSD(res)
 ```
 
 ```{r ANOVAres, echo=FALSE}
-res = aov(dat1$rating~dat1$city)
+res = aov(dat$rating~dat$city)
 summary(res)
 TukeyHSD(res)
 ```
-\pagebreak
-### Full code block
-```{r fullcode, eval=FALSE}
-#Create data frame
-dat1 = data.frame(rating = c(13,16,8,15,9,
-                             29,35,24,27,32,
-                             57,59,52,55,60),
-                  city = c("Charleston","Charleston","Charleston","Charleston","Charleston",
-                           "Columbia","Columbia","Columbia","Columbia","Columbia",
-                            "Florence","Florence","Florence","Florence","Florence"))
 
-#Print data frame
-dat1
+### Unequal Variance Welch's ANOVA
+This code chuck performs a Welch's ANOVA, displays summary data, then performs a Games-Howell post-hoc pairwise comparisons test.
+```{r Welch, eval=FALSE}
+#Load required packages. These might need to be installed
+library(rstatix)
+res = oneway.test(dat$rating~dat$city, var.equal=FALSE)
+res
+games_howell_test(dat, rating~city)
+```
 
-#Summary statistics
-#Average rating for each city
-tapply(X = dat1$rating, INDEX = dat1$city, FUN = mean)
+```{r Welchres, echo=FALSE}
+library(rstatix)
+res = oneway.test(dat$rating~dat$city, var.equal=FALSE)
+res
+games_howell_test(dat, rating~city)
+```
 
-#Standard deviation of rating for each city
-tapply(X = dat1$rating, INDEX = dat1$city, FUN = sd)
+### Non-parametric Kruskal-Wallis Test
+This code chuck performs a Kruskal-Wallis Test, displays summary data, then performs a Dunn post-hoc pairwise comparisons test. Note, the data provided on this tutorial meet assumptions of an ANOVA. The Kruskal-Wallis test is provided for your information.
+```{r KW, eval=FALSE}
+#Load required packages. These might need to be installed
+library(FSA)
+res = kruskal.test(dat$rating~dat$city)
+res
+dunnTest(dat$rating~dat$city)
+```
 
-#Create Boxplot
-boxplot(dat1$rating~dat1$city,
-        ylab = "Rating (%)", xlab = "City")
-
-#ANOVA
-res = aov(dat1$rating~dat1$city)
-#Display ANOVA results
-summary(res)
-#Tukey post-hoc comparisons
-TukeyHSD(res)
-
-
+```{r KWres, echo=FALSE}
+#Load required packages. These might need to be installed
+library(FSA)
+res = kruskal.test(dat$rating~dat$city)
+res
+dunnTest(dat$rating~dat$city)
 ```
