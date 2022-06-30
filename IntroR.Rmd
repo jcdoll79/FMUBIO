@@ -13,9 +13,9 @@ This tutorial will introduce you to the basic coding syntax used in R. The topic
 
 -   Comments
 -   Operators
--   Objects
 -   Data Types
--   Creating New Variables and Variable assignment
+-   Creating New Variables
+-   Complex data types
 -   Functions
 -   Packages
 -   Coding Tips
@@ -33,12 +33,12 @@ So, just how do you add comments? Comments are made by using the hashtag, #, cha
 
 RStudio uses different colors for executable R code and comments. You can change your color scheme in RStudio under the "Tools"\>\>"Global Options..."\>\>"Appearance" Dialog box.
 
+\pagebreak
 ## Operators
 
 R has two basic types of operators, arithmetic and logical. You will use both throughout this semester so it's important to understand the difference.
 
 ### Arithmetic Operators:
-
 ```{r arithmetic, echo=FALSE}
 library(kableExtra)
 table1 <- data.frame(Operator=c("+","-","*","/","^ or **"),Description = c("addition","subtraction","multiplication","division","exponentiation"))
@@ -47,7 +47,6 @@ table1 <- data.frame(Operator=c("+","-","*","/","^ or **"),Description = c("addi
 ```
 
 ### Logical Operators:
-
 ```{r logical, echo=FALSE}
 library(kableExtra)
 table1 <- data.frame(Operator=c(">",">=","<","<=","==","!="),
@@ -59,36 +58,41 @@ table1 <- data.frame(Operator=c(">",">=","<","<=","==","!="),
 ```
 
 ### Assignment operators
-
 R has two types of assignment operators. These are used to assign values to objects (which you will learn below). However, it's important to know these assignment operators before moving on. \<- and = Note these two assignment operators function the same. R has historically used "\<-" but you will often see "=" in some tutorials posted online. Note that a single = is **DIFFERENT** than a double ==. The single = is an assignment operator and the double == is a logical operator to determine if two objects are exactly equal.
 
-## Objects
-
+\pagebreak
 ## Data Types
 
 R has several basic data types that you will use. Below is a brief description and R code used to create these data types. Note the use of comments in the R code to describe the data types and the use of a function (more below) that will return the data type of an object. R stores data of similar and dissimilar types within more complex types of containers; vector, matrix, data frame, and list. These will be discussed in more detail after introducing you to creating new variables/objects.
 
-```{r data_types}
-#numeric, these data types can take on any number with decimals. 
-#You will often use these with temperature, catch rate, weight, etc.
+### Numeric
+Numeric data types can take on any number with decimals. You will often use these with temperature, catch rate, weight, etc.
+```{r numeric_data_types}
 #Assign the value of 20.5 to the object x
 x = 20.5
 #print the values within the object x
 x
 #Determine the data type of object x
 class(x)
+```
 
-#integer, these data types can take on any whole without decimals. 
-#You will often use these with counts of individuals.
+### Integer
+Integer data types can take on any whole without decimals. You will often use these with counts of individuals.
+```{r integer_data_types}
 #Assign the integer value of 6 to the object y
 y = as.integer(6)
 #print the values within the object y
 y
 #Determine the data type of object y
 class(y)
+```
 
-#character, these data types represent string values. 
-#You will often use these for captions and column headers.
+\pagebreak
+### Character
+Character data types represent string values. You will often use these for captions and column headers.
+
+```{r character_data_types}
+
 #Assign the character string "Goodson Pond" to the object z
 z = "Goodson Pond"
 #print the values within the object z
@@ -117,12 +121,14 @@ temp <- 18.2
 temp
 ```
 
+\pagebreak
 ## Complex data types
 
 This section describes creating vectors, matrices, data frames, and lists.
 
 A vector is a sequence of data of the **SAME** basic data type, data types can't be mixed. A single vector can contain all numeric, all integer, or all character types.
 
+### Vectors
 ```{r vectors}
 #create a vector of largemouth bass catch rates by site. Each number represents 
 #the total number of largemouth bass collected at a single site. The name used 
@@ -136,6 +142,7 @@ lmb[3]
 c("one","two","four","two","five","two")
 ```
 
+### Matrix
 A matrix is a collection of data elements arranged in a two-dimensional layout. The layout is the same as an Excel spreadsheet. The matrix created in the following code represent catch rates of largemouth bass at six sites (rows) over four years (columns). Each row contains catches from a single site across all years and each column contains catches across all sites for a single year. It's important to note that a matrix will only contain data of the same type.
 
 ```{r matrix}
@@ -173,6 +180,7 @@ lmb_bycolumn #print the matrix in the console
 
 ```
 
+### Data frame
 A data frame is the same basic structure as a matrix (i.e., two-dimensional layout) but it can contain DIFFERENT types of data in each column. Note that column names must be characters. If you use numbers for column names they must be in quotation marks. However, R will automatically add an "X" to the beginning of numbers in quotation marks when creating column names.
 
 ```{r data_frame}
@@ -194,6 +202,7 @@ lmb_df[,2]
 lmb_df$X2018
 ```
 
+### List
 A list is a vector containing other objects. A list can contain multiple vectors, multiple matrices, multiple data frames, or any combination. The example below combined one vector, one matrix, and one data frame together in a single list.
 
 ```{r list}
@@ -224,6 +233,7 @@ lmb_list[[2]]
 
 Try to return the vector and data frame from the list on your own.
 
+\pagebreak
 ## Functions
 
 Functions in R perform a calculation or action to data. Nothing happens in R without functions. In fact you have already been using functions in this tutorial! Many of the code examples above use the "c()" function. It's common to use parentheses next to a function to indicate that it is a function. R functions are often given a name that hints at what they do. The c() function combines elements into a vector, the data.frame() function creates a data frame, etc. Can you find the other functions you have been using above? Below are some useful functions that you will use throughout this class?
@@ -253,25 +263,32 @@ Mean_2018 = mean(lmb_df[,2])
 Mean_2018
 ```
 
+\pagebreak
 ## Packages
 
 The R core library comes pre-installed with a wide variety of functions to manage, summarize, plot, and analyze data. However, there will be many occasions where you need to use a functions that isn't available in the R core library. Fortunately, R users are also R creators and contribute useful functions in "Packages". These extension packages can be installed using the RStudio GUI (click the Packages tab, then Install) or with the install.packages() function. The following code will install the {MatrixStats} package. This package contains a variety of functions that are useful when using matrices. For example, colMedians() will return the median from all columns and colSds will return the standard deviation from all columns. You'll use these functions throughout the semester. 
 
 After installing a package, you have to tell R to load the package before you can use this. This is accomplished using the library() function
-```{r}
-#install the matrixStats package
-#install.packages("matrixStats")
-#You will have to remove the comment from the above line to use.
+```{r install_matrixStats, eval=FALSE}
+#install the matrixStats package. You only have to do this once.
+install.packages("matrixStats")
 
-#load the matrixStats package
+#load the matrixStats package. You will have to do this every time you open R.
 library(matrixStats)
 ```
-Install the matrixStats package and use the following functions to generate summary statistics for the lmb_byrow matrix created above.
+Install the matrixStats package and use the following functions to generate summary statistics for the lmb_byrow matrix created above. Review the help page for the functions for details.
 
 * colMedians() to calculate the median for each column
 * colMeans2() to calculate the mean for each column
 * colSums2() to calculate the sum of all values in each column
 
+View the help file associated with the functions above using:
+```{r help_function, eval=FALSE}
+#load the matrixStats package first
+library(matrixStats)
+help(colMedians)
+```
+\pagebreak
 ## Coding tips
 Below are a few coding tips to remember
 
@@ -280,6 +297,8 @@ Below are a few coding tips to remember
 * When copying code from a source, make sure you are using a comma "," or period "." when needed. They look similar with some fonts but they do very different things in R.
 * Write human readable code. Use space to your advantage. The matrix created above could be accomplished on a single line but the single line would be difficult to read. Don't be afraid to use blank spaces and hard returns to improve the human readability of your code.
 * Put space between and around variable names and operators
+* Make sure you have the same number of open parentheses "(" as you do closed parentheses ")"
+* Make sure you have an even number of quotation marks. If you have an open quote, there must be a closed quote to encapsulate text.
 * Use meaningful variable names of one to three words (but the variable names can have spaces!)
 * Write complete and helpful comments describing your code
 * Keep a consistent style. Avoid using capitalization for some variables but not others.
