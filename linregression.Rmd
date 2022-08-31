@@ -1,7 +1,7 @@
 ---
 title: "Linear Regression"
 author: "FMU Biology Department"
-output: word_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -34,9 +34,41 @@ sd(dat3$elec)
 plot(dat3$elec~dat3$sodium,
         ylab = "Electrical output (watts)", xlab = "Sodium concentration (mEq/L)")
 
-#Perform a correlation analysis and print Pearson's r, p-value, and associated statistics
+#Perform a linear regression analysis
 mod1=lm(dat3$elec ~ dat3$sodium)
 
 summary(mod1)
+
+```
+
+\pagebreak
+### Full code block
+```{r fullcode2, eval=FALSE}
+#Create data frame
+dat3 = data.frame(sodium = c(95,104,88,97,102,89,104,105,111,88,
+                             98,102,96,105,107,105,96,90,110,98),
+                  elec = c(190,200,192,202,196,195,200,202,206,180,
+                            205,199,193,205,208,210,204,197,206,200))
+#Print data frame
+dat3
+
+#Summary statistics
+#Average and standard deviation of sodium
+mean(dat3$sodium)
+sd(dat3$sodium)
+
+#Average and standard deviation of elec
+mean(dat3$elec)
+sd(dat3$elec)
+
+#Create scatterplot
+plot(dat3$elec~dat3$sodium,
+        ylab = "Electrical output (watts)", xlab = "Sodium concentration (mEq/L)")
+
+#Perform a linear regression analysis
+mod1=lm(dat3$elec ~ dat3$sodium)
+
+summary(mod1)
+
 
 ```

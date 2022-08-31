@@ -69,7 +69,7 @@ R has several basic data types that you will use. Below is a brief description a
 Numeric data types can take on any number with decimals. You will often use these with temperature, catch rate, weight, etc.
 ```{r numeric_data_types}
 #Assign the value of 20.5 to the object x
-x = 20.5
+x <- 20.5
 #print the values within the object x
 x
 #Determine the data type of object x
@@ -80,7 +80,7 @@ class(x)
 Integer data types can take on any whole without decimals. You will often use these with counts of individuals.
 ```{r integer_data_types}
 #Assign the integer value of 6 to the object y
-y = as.integer(6)
+y <- as.integer(6)
 #print the values within the object y
 y
 #Determine the data type of object y
@@ -94,7 +94,7 @@ Character data types represent string values. You will often use these for capti
 ```{r character_data_types}
 
 #Assign the character string "Goodson Pond" to the object z
-z = "Goodson Pond"
+z <- "Goodson Pond"
 #print the values within the object z
 z
 #Determine the data type of object z
@@ -238,7 +238,7 @@ Try to return the vector and data frame from the list on your own.
 
 Functions in R perform a calculation or action to data. Nothing happens in R without functions. In fact you have already been using functions in this tutorial! Many of the code examples above use the "c()" function. It's common to use parentheses next to a function to indicate that it is a function. R functions are often given a name that hints at what they do. The c() function combines elements into a vector, the data.frame() function creates a data frame, etc. Can you find the other functions you have been using above? Below are some useful functions that you will use throughout this class?
 
-A function include the function name followed by parentheses. The parentheses contains arguments that the function needs. For example, the mean() function requires a vector within the parentheses. We will use coding introduced above to take the mean of a specific rows or columns from a data frame.
+A function includes the function name followed by parentheses. The parentheses contains arguments that the function needs. For example, the mean() function requires a vector within the parentheses. We will use coding introduced above to take the mean of a specific rows or columns from a data frame.
 
 ```{r}
 #First, lets create a data frame with some data
